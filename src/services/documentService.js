@@ -27,7 +27,7 @@ export class DocumentService {
       const embeddings = await this.embeddingProvider.generateEmbeddings(chunks);
       logger.info('Embeddings generated', { count: embeddings.length });
 
-      // Use fixed IDs so upsert replaces old content
+      const version = Date.now();
       const vectors = chunks.map((chunk, index) => ({
         id: `doc-chunk-${index}`,
         values: embeddings[index],
@@ -37,17 +37,19 @@ export class DocumentService {
           tags: metadata.tags || [],
           type: metadata.type || 'text',
           chunkIndex: index,
+          version,
           timestamp: new Date().toISOString()
         }
       }));
 
       await this.vectorize.upsert(vectors);
-      logger.info('Vectors upserted into Vectorize', { count: vectors.length });
+      logger.info('Vectors upserted into Vectorize', { count: vectors.length, version });
 
       return {
         success: true,
         chunksProcessed: chunks.length,
-        vectorIds: vectors.map(v => v.id)
+        vectorIds: vectors.map(v => v.id),
+        version
       };
     } catch (error) {
       logger.error('Document ingestion failed', error);

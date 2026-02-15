@@ -25,7 +25,11 @@ export class ChatService {
       
       logger.info('Vector search completed', { resultsCount: results.length });
 
-      const relevantResults = results.filter(r => r.score >= config.search.similarityThreshold);
+      // Filter by latest version
+      const latestVersion = Math.max(...results.map(r => r.metadata.version || 0));
+      const relevantResults = results
+        .filter(r => r.metadata.version === latestVersion)
+        .filter(r => r.score >= config.search.similarityThreshold);
 
       if (relevantResults.length === 0) {
         const noInfoMessage = language === 'id' 
