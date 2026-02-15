@@ -1,0 +1,13 @@
+{
+    "content": "John Doe is a Modern Full-Stack Developer focused on building scalable, cloud-native web applications and delightful user experiences.\nLocation: Remote\nWebsite: [hidden]\nEmail: [hidden]\n\nTechnical Skills:\n- JavaScript (Node.js, React, Next.js)\n- TypeScript\n- Go\n- PostgreSQL\n- Docker & Kubernetes\n- Cloud & CI/CD\n\nWork Experience:\n\n at Company A (01M2019Y - 06M2021Y)\n<p>- Built responsive SaaS dashboards using modern frontend frameworks<br>- Designed REST and GraphQL APIs for internal services<br>- Improved application performance by implementing caching and query optimization</p>\nTech stack: React, Node.js, PostgreSQL, Redis, Docker\n\n at Company B (07M2021Y - 08M2023Y)\n<p>- Developed microservices architecture using Go and TypeScript<br>- Implemented authentication and role-based access systems<br>- Set up CI/CD pipelines and container orchestration for production deployments</p>\nTech stack: Go, TypeScript, Kubernetes, Cloud, Terraform\n\n at Company C (09M2023Y - Present)\n<p><strong>Senior Full Stack Developer</strong><br><i>September 2023 - Present</i></p><ul><li>Lead development of scalable web platform used by thousands of users</li><li>Architect frontend and backend services</li><li>Improve observability with tracing, logging, and monitoring</li><li>Mentor junior developers and conduct architecture reviews</li></ul>\nTech stack: Modern Frontend Framework, Go, PostgreSQL, Observability Tools, Cloud\n\nKey Projects:\n\n1. Project Alpha\n   <p>Developer productivity platform for managing tasks and deployments</p>\n   Tech stack: Modern Web Stack\n   URL: [hidden]\n\n2. Project Beta\n   <p>API-first commerce platform built with microservices architecture</p>\n   Tech stack: Go, GraphQL, React\n\nEducation:\n- Bachelor in Computer Science (Year hidden)\n- High School Diploma (Year hidden)\n\nSocial Media:\n- Linkedin: [hidden]\n- Github: [hidden]\n- Medium: [hidden]\n- Docker Hub: [hidden]",
+    "metadata": {
+        "source": "portfolio",
+        "tags": [
+            "skills",
+            "experience",
+            "projects",
+            "education"
+        ],
+        "type": "text"
+    }
+}

@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  portfolio-chatbot:
+    build: .
+    container_name: portfolio-chatbot
+    ports:
+      - "${PORT:-3000}:${PORT:-3000}"
+    environment:
+      - PORT=${PORT:-3000}
+      - NODE_ENV=${NODE_ENV:-production}
+      - CLOUDFLARE_ACCOUNT_ID=${CLOUDFLARE_ACCOUNT_ID}
+      - CLOUDFLARE_API_TOKEN=${CLOUDFLARE_API_TOKEN}
+      - VECTORIZE_INDEX_NAME=${VECTORIZE_INDEX_NAME}
+      - LLM_PROVIDER=${LLM_PROVIDER:-google}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - GOOGLE_MODEL=${GOOGLE_MODEL:-gemini-1.5-flash}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-4-turbo-preview}
+      - CF_AI_GATEWAY_URL=${CF_AI_GATEWAY_URL}
+      - EMBEDDING_MODEL=${EMBEDDING_MODEL:-text-embedding-3-small}
+      - EMBEDDING_DIMENSIONS=${EMBEDDING_DIMENSIONS:-768}
+      - CHUNK_SIZE=${CHUNK_SIZE:-500}
+      - CHUNK_OVERLAP=${CHUNK_OVERLAP:-50}
+      - TOP_K_RESULTS=${TOP_K_RESULTS:-5}
+      - SIMILARITY_THRESHOLD=${SIMILARITY_THRESHOLD:-0.7}
+      - SHOW_SOURCES=${SHOW_SOURCES:-false}
+      - RATE_LIMIT_WINDOW_MS=${RATE_LIMIT_WINDOW_MS:-60000}
+      - RATE_LIMIT_MAX_REQUESTS=${RATE_LIMIT_MAX_REQUESTS:-20}
+      - IP_WHITELIST=${IP_WHITELIST}
+      - API_KEY=${API_KEY}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:${PORT:-3000}/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

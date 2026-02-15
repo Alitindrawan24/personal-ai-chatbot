@@ -1,0 +1,10 @@
+node_modules
+npm-debug.log
+.env
+.git
+.gitignore
+README.md
+PROVIDER_SETUP.md
+CLOUDFLARE_SETUP.md
+TASK.md
+.qoder

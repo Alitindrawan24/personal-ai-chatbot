@@ -1,0 +1,22 @@
+{
+  "name": "portfolio-chatbot-ai",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Personal Portfolio AI Chatbot with Cloudflare Vectorize",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "keywords": ["chatbot", "ai", "vectorize", "portfolio"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "dotenv": "^16.3.1",
+    "zod": "^3.22.4",
+    "express-rate-limit": "^7.1.5",
+    "openai": "^4.28.0",
+    "@google/generative-ai": "^0.21.0"
+  }
+}

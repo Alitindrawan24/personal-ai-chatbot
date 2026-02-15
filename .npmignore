@@ -1,0 +1,17 @@
+# Files to exclude from npm package
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+.git
+.gitignore
+node_modules
+coverage
+.vscode
+.idea
+*.md
+!README.md
+docker-compose.yml
+Dockerfile
+.dockerignore
