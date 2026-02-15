@@ -20,3 +20,15 @@ export async function ingestDocument(req, res, next) {
     next(error);
   }
 }
+
+/**
+ * Get all documents endpoint
+ */
+export async function getAllDocuments(req, res, next) {
+  try {
+    const documents = await documentService.getAllDocuments();
+    res.json({ success: true, count: documents.length, documents });
+  } catch (error) {
+    next(error);
+  }
+}

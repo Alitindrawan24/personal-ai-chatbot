@@ -34,6 +34,28 @@ export class VectorizeClient {
   }
 
   /**
+   * Upsert vectors into Vectorize (insert or update)
+   * @param {Array} vectors - Array of {id, values, metadata}
+   */
+  async upsert(vectors) {
+    const response = await fetch(`${this.baseUrl}/upsert`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${this.apiToken}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ vectors })
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      throw new Error(`Vectorize upsert failed: ${error}`);
+    }
+
+    return response.json();
+  }
+
+  /**
    * Query vectors by similarity
    * @param {number[]} vector - Query vector
    * @param {number} topK - Number of results
@@ -67,7 +89,7 @@ export class VectorizeClient {
    * @param {string[]} ids - Vector IDs to delete
    */
   async delete(ids) {
-    const response = await fetch(`${this.baseUrl}/delete`, {
+    const response = await fetch(`${this.baseUrl}/deleteByIds`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${this.apiToken}`,
@@ -82,5 +104,47 @@ export class VectorizeClient {
     }
 
     return response.json();
+  }
+
+  /**
+   * Get index info
+   */
+  async getInfo() {
+    const response = await fetch(this.baseUrl, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${this.apiToken}`
+      }
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      throw new Error(`Vectorize getInfo failed: ${error}`);
+    }
+
+    return response.json();
+  }
+
+  /**
+   * List all vectors (workaround using query)
+   */
+  async listAll(limit = 50) {
+    const info = await this.getInfo();
+    const dimensions = info.result?.config?.dimensions || 768;
+    const zeroVector = new Array(dimensions).fill(0);
+    
+    return this.query(zeroVector, Math.min(limit, 50));
+  }
+
+  /**
+   * Delete all vectors from index
+   */
+  async deleteAll() {
+    const vectors = await this.listAll();
+    if (vectors.length === 0) return { deleted: 0 };
+    
+    const ids = vectors.map(v => v.id);
+    await this.delete(ids);
+    return { deleted: ids.length };
   }
 }

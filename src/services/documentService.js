@@ -27,8 +27,9 @@ export class DocumentService {
       const embeddings = await this.embeddingProvider.generateEmbeddings(chunks);
       logger.info('Embeddings generated', { count: embeddings.length });
 
+      // Use fixed IDs so upsert replaces old content
       const vectors = chunks.map((chunk, index) => ({
-        id: crypto.randomUUID(),
+        id: `doc-chunk-${index}`,
         values: embeddings[index],
         metadata: {
           text: chunk,
@@ -40,8 +41,8 @@ export class DocumentService {
         }
       }));
 
-      await this.vectorize.insert(vectors);
-      logger.info('Vectors inserted into Vectorize', { count: vectors.length });
+      await this.vectorize.upsert(vectors);
+      logger.info('Vectors upserted into Vectorize', { count: vectors.length });
 
       return {
         success: true,
@@ -50,6 +51,24 @@ export class DocumentService {
       };
     } catch (error) {
       logger.error('Document ingestion failed', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get all documents from vector store
+   * @returns {Promise<Array>} All documents
+   */
+  async getAllDocuments() {
+    try {
+      const vectors = await this.vectorize.listAll();
+      return vectors.map(v => ({
+        id: v.id,
+        score: v.score,
+        metadata: v.metadata
+      }));
+    } catch (error) {
+      logger.error('Failed to retrieve documents', error);
       throw error;
     }
   }
