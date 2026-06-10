@@ -64,8 +64,9 @@ class CloudflareLLMProvider extends LLMProvider {
   }
 
   async generateResponse(messages) {
+    const model = config.cloudflare.llmModel;
     const response = await fetch(
-      `https://api.cloudflare.com/client/v4/accounts/${this.accountId}/ai/run/@cf/meta/llama-2-7b-chat-int8`,
+      `https://api.cloudflare.com/client/v4/accounts/${this.accountId}/ai/run/${model}`,
       {
         method: 'POST',
         headers: {

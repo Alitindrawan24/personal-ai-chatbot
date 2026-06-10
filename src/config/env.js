@@ -10,7 +10,8 @@ export const config = {
     accountId: process.env.CLOUDFLARE_ACCOUNT_ID,
     apiToken: process.env.CLOUDFLARE_API_TOKEN,
     vectorizeIndexName: process.env.VECTORIZE_INDEX_NAME,
-    aiGatewayUrl: process.env.CF_AI_GATEWAY_URL
+    aiGatewayUrl: process.env.CF_AI_GATEWAY_URL,
+    llmModel: process.env.CLOUDFLARE_LLM_MODEL || '@cf/meta/llama-3.1-8b-instruct-fp8'
   },
   
   llm: {
