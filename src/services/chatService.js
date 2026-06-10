@@ -90,22 +90,36 @@ export class ChatService {
   }
 
   isInappropriateQuestion(question) {
-    const lowerQuestion = question.toLowerCase();
-    
     const blockedPatterns = [
+      // Credential & sensitive file requests
+      /\b(\.env|env file|environment variable|config file|secret|api key|token|private key|credential|auth key)\b/i,
       /\b(password|credit card|ssn|social security|bank account|pin|cvv)\b/i,
-      /\b(address|phone number|email|personal contact)\b/i,
-      /\b(hack|exploit|vulnerability|attack|malware|virus)\b/i,
+      /\b(address|phone number|personal contact)\b/i,
+
+      // Coding / programming tasks
+      /\b(write (me )?(a |some )?(code|function|script|program|class|component|module|snippet))\b/i,
+      /\b(create (a |an )?(function|script|program|class|component|api|endpoint|app|website))\b/i,
+      /\b(build (me )?(a |an )?(app|website|api|function|script|tool))\b/i,
+      /\b(generate (a |an )?(code|function|script|class|component))\b/i,
+      /\b(debug|fix (my |this )?(code|error|bug)|refactor|review (my )?code)\b/i,
+      /\b(how (do i|to) (code|program|implement|use|install))\b/i,
+      /\b(give me (the )?(code|script|function|example code))\b/i,
+      /\b(show (me )?(the )?(code|implementation|example code))\b/i,
+      /\b(coding|programming|software development)\b/i,
+      /\b(write code|help me code|solve (this )?(code|problem|algorithm))\b/i,
+
+      // Security / hacking
+      /\b(hack|exploit|vulnerability|attack|malware|virus|injection|bypass)\b/i,
       /\b(illegal|crime|fraud|scam)\b/i,
+
+      // Off-topic
       /\b(weather|news|politics|religion|medical advice)\b/i,
-      /\b(how to (make|create|build))\b/i,
       /\b(recipe|cooking|food)\b/i,
       /\b(movie|music|game|sport)\b/i,
-      /\b(write code|debug|fix|help me with|solve)\b/i,
       /\b(calculate|compute|translate)\b/i
     ];
 
-    return blockedPatterns.some(pattern => pattern.test(lowerQuestion));
+    return blockedPatterns.some(pattern => pattern.test(question));
   }
 
   getRestrictedResponse(language) {
@@ -125,28 +139,48 @@ export class ChatService {
 
   buildSystemPrompt(language) {
     if (language === 'id') {
-      return `Anda adalah asisten portfolio profesional. Jawab pertanyaan dengan singkat dan langsung ke intinya.
+      return `Anda adalah asisten portfolio profesional. Tugas Anda hanya menjawab pertanyaan tentang portfolio pemilik.
 
-Aturan:
+Aturan WAJIB:
 - Jawab SANGAT SINGKAT (1-2 kalimat maksimal)
 - Langsung ke poin, tanpa penjelasan panjang
-- Hanya gunakan data dari konteks
-- Jangan tambahkan informasi yang tidak ada
+- Hanya gunakan data dari konteks yang diberikan
+- Jangan tambahkan informasi yang tidak ada di konteks
 - Gunakan riwayat chat untuk memahami konteks percakapan
-- Jika tidak tahu, katakan "Tidak ada informasi tentang itu"
-- Jawab dalam Bahasa Indonesia`;
+- Jika tidak ada informasi, katakan "Tidak ada informasi tentang itu"
+- Jawab dalam Bahasa Indonesia
+
+Larangan KERAS — tolak dan jangan penuhi jika user meminta:
+- Menulis, membuat, atau menghasilkan kode / skrip / program apapun
+- Menampilkan isi file seperti .env, config, credential, API key, token, atau file sensitif lainnya
+- Melakukan debug, refactor, atau review kode
+- Memberikan tutorial pemrograman atau instruksi teknis di luar portfolio
+- Informasi pribadi seperti password, nomor telepon, atau data sensitif lainnya
+
+Jika ada permintaan yang melanggar larangan di atas, balas dengan:
+"Maaf, saya hanya dapat menjawab pertanyaan seputar portfolio profesional."`;
     }
 
-    return `You are a professional portfolio assistant. Answer questions briefly and directly to the point.
+    return `You are a professional portfolio assistant. Your only purpose is to answer questions about the owner's portfolio.
 
-Rules:
+MANDATORY rules:
 - Answer VERY SHORT (1-2 sentences maximum)
 - Get straight to the point, no long explanations
-- Only use data from the context
-- Don't add information that isn't there
+- Only use data from the provided context
+- Don't add information that isn't in the context
 - Use chat history to understand conversation context
-- If you don't know, say "No information about that"
-- Answer in English`;
+- If there is no information, say "No information about that"
+- Answer in English
+
+STRICT prohibitions — refuse and do not comply if the user asks you to:
+- Write, create, or generate any code / script / program
+- Display contents of files such as .env, config, credentials, API keys, tokens, or any sensitive file
+- Debug, refactor, or review code
+- Provide programming tutorials or technical instructions unrelated to the portfolio
+- Share personal or sensitive information such as passwords, phone numbers, or private data
+
+If a request violates the above prohibitions, respond with:
+"Sorry, I can only answer questions about the professional portfolio."`;
   }
 
   buildUserPrompt(question, context, language) {
